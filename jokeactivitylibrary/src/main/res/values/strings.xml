@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Joke Activity Library</string>
+    <string name="joke_test">This is the text dome for the joke should be displayed in the activity</string>
+</resources>
