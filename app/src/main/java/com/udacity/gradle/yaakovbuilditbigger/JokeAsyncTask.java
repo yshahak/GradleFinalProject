@@ -1,14 +1,10 @@
 package com.udacity.gradle.yaakovbuilditbigger;
 
-import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Pair;
 import android.widget.Toast;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
-import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
-import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 
 import java.io.IOException;
 
@@ -17,35 +13,21 @@ import il.co.yshahak.backend.myApi.MyApi;
 /**
  * Created by B.E.L on 28/01/2016.
  */
-public class JokeAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> {
+public class JokeAsyncTask extends AsyncTask<MainActivity, Void, String> {
     private static MyApi myApiService = null;
-    private Context context;
+    private MainActivity context;
 
     @Override
-    protected String doInBackground(Pair<Context, String>... params) {
+    protected String doInBackground(MainActivity... params) {
         if(myApiService == null) {  // Only do this once
-            MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
-                    new AndroidJsonFactory(), null)
-                    // options for running against local devappserver
-                    // - 10.0.2.2 is localhost's IP address in Android emulator
-                    // - turn off compression when running against local devappserver
-                    .setRootUrl("http://10.0.2.2:8080/_ah/api/")
-                    .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-                        @Override
-                        public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
-                            abstractGoogleClientRequest.setDisableGZipContent(true);
-                        }
-                    });
-            // end options for devappserver
-
+            MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+                    .setRootUrl("https://mystical-studio-121015.appspot.com/_ah/api/");
             myApiService = builder.build();
         }
-
-        context = params[0].first;
-        String name = params[0].second;
+        context = params[0];
 
         try {
-            return myApiService.sayHi(name).execute().getData();
+            return myApiService.setJoke().execute().getJoke();
         } catch (IOException e) {
             return e.getMessage();
         }
@@ -53,6 +35,6 @@ public class JokeAsyncTask extends AsyncTask<Pair<Context, String>, Void, String
 
     @Override
     protected void onPostExecute(String result) {
-        Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+        context.startActivityJoke(result);
     }
 }

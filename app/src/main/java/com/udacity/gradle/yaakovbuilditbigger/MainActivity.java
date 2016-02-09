@@ -1,17 +1,16 @@
 package com.udacity.gradle.yaakovbuilditbigger;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Pair;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.JokeEngine;
+import il.co.yshahak.jokeactivitylibrary.JokeActivity;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +42,19 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void tellJoke(View view){
-        String joke = JokeEngine.getJoke();
-//        Intent jokeIntent = new Intent(this, JokeActivity.class);
-//        jokeIntent.putExtra(JokeActivity.EXTRA_JOKE, joke);
-//        startActivity(jokeIntent);
-        new JokeAsyncTask().execute(new Pair<Context, String>(this, joke));
+        new JokeAsyncTask().execute(this);
     }
 
+    public void startActivityJoke(String joke) {
+        Intent jokeIntent = new Intent(this, JokeActivity.class);
+        jokeIntent.putExtra(JokeActivity.EXTRA_JOKE, joke);
+        startActivity(jokeIntent);
+    }
 
+    private interface JokesCallback{
+
+        void onSuccess(String joke);
+
+        void onFailure();
+    }
 }

@@ -6,11 +6,10 @@
 
 package il.co.yshahak.backend;
 
+import com.example.JokeEngine;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
-
-import javax.inject.Named;
 
 /** An endpoint class we are exposing */
 @Api(
@@ -24,13 +23,13 @@ import javax.inject.Named;
 )
 public class MyEndpoint {
 
-    /** A simple endpoint method that takes a name and says Hi back */
-    @ApiMethod(name = "sayHi")
-    public MyBean sayHi(@Named("name") String name) {
-        MyBean response = new MyBean();
-        response.setData("Hi, " + name);
-
-        return response;
+    /** A simple endpoint method that get joke from library abd return to the requester */
+    @ApiMethod(name = "setJoke")
+    public Joke setJoke() {
+        String joke = JokeEngine.getJoke();
+        Joke responseJoke = new Joke();
+        responseJoke.setJoke(joke);
+        return responseJoke;
     }
 
 }
