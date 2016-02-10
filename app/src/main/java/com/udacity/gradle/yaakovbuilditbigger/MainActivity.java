@@ -42,19 +42,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(View view){
-        new JokeAsyncTask().execute(this);
+        new JokeAsyncTask().execute(jokesCallback);
     }
 
-    public void startActivityJoke(String joke) {
-        Intent jokeIntent = new Intent(this, JokeActivity.class);
-        jokeIntent.putExtra(JokeActivity.EXTRA_JOKE, joke);
-        startActivity(jokeIntent);
-    }
 
-    private interface JokesCallback{
+    private JokesCallback jokesCallback = new JokesCallback() {
+        @Override
+        public void onSuccess(String joke) {
+            Intent jokeIntent = new Intent(MainActivity.this, JokeActivity.class);
+            jokeIntent.putExtra(JokeActivity.EXTRA_JOKE, joke);
+            startActivity(jokeIntent);
+        }
 
+        @Override
+        public void onFailure() {
+
+        }
+    };
+
+    public interface JokesCallback{
         void onSuccess(String joke);
-
         void onFailure();
     }
 }
