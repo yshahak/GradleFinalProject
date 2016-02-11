@@ -1,4 +1,4 @@
-package com.udacity.gradle.yaakovbuilditbigger;
+package com.udacity.gradle.yaakovbuilditbigger.free;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,10 +7,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.udacity.gradle.yaakovbuilditbigger.JokeAsyncTask;
+import com.udacity.gradle.yaakovbuilditbigger.R;
+
 import il.co.yshahak.jokeactivitylibrary.JokeActivity;
 
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements JokeAsyncTask.JokesCallback{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,26 +44,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(View view){
-        new JokeAsyncTask().execute(jokesCallback);
+        new JokeAsyncTask().execute(this);
+    }
+
+    @Override
+    public void onSuccess(String joke) {
+        Intent jokeIntent = new Intent(MainActivity.this, JokeActivity.class);
+        jokeIntent.putExtra(JokeActivity.EXTRA_JOKE, joke);
+        startActivity(jokeIntent);
+    }
+
+    @Override
+    public void onFailure() {
+
     }
 
 
-    private JokesCallback jokesCallback = new JokesCallback() {
-        @Override
-        public void onSuccess(String joke) {
-            Intent jokeIntent = new Intent(MainActivity.this, JokeActivity.class);
-            jokeIntent.putExtra(JokeActivity.EXTRA_JOKE, joke);
-            startActivity(jokeIntent);
-        }
-
-        @Override
-        public void onFailure() {
-
-        }
-    };
-
-    public interface JokesCallback{
-        void onSuccess(String joke);
-        void onFailure();
-    }
 }
