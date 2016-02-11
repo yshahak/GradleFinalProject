@@ -36,6 +36,12 @@ android {
     }
 }
 
+task testEndPointServer {
+    dependsOn ":backend:appengineRun"
+    dependsOn ":app:connectedAndroidTest"
+    finalizedBy ":backend:appengineStop"
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     // Added for AdMob

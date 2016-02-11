@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.udacity.gradle.yaakovbuilditbigger.JokeAsyncTask;
 import com.udacity.gradle.yaakovbuilditbigger.R;
@@ -14,11 +15,14 @@ import il.co.yshahak.jokeactivitylibrary.JokeActivity;
 
 
 public class MainActivity extends AppCompatActivity implements JokeAsyncTask.JokesCallback{
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        progressBar = (ProgressBar)findViewById(R.id.progress_bar);
+
     }
 
 
@@ -43,11 +47,14 @@ public class MainActivity extends AppCompatActivity implements JokeAsyncTask.Jok
     }
 
     public void tellJoke(View view){
+        progressBar.setVisibility(View.VISIBLE);
         new JokeAsyncTask().execute(this);
     }
 
     @Override
     public void onSuccess(String joke) {
+        progressBar.setVisibility(View.GONE);
+
         Intent jokeIntent = new Intent(MainActivity.this, JokeActivity.class);
         jokeIntent.putExtra(JokeActivity.EXTRA_JOKE, joke);
         startActivity(jokeIntent);

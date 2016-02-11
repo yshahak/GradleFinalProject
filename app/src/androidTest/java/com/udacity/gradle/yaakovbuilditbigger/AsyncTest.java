@@ -12,9 +12,8 @@ public class AsyncTest extends AndroidTestCase {
     private static String joke;
 
     public void testForGettingSomeResultFromServer() {
-        final CountDownLatch signal = new CountDownLatch(1);
 
-        MainActivity.JokesCallback jokesCallback = new MainActivity.JokesCallback() {
+        JokeAsyncTask.JokesCallback jokesCallback = new JokeAsyncTask.JokesCallback() {
             @Override
             public void onSuccess(String testResult) {
                 joke = testResult;
@@ -28,10 +27,10 @@ public class AsyncTest extends AndroidTestCase {
 
         new JokeAsyncTask().execute(jokesCallback);
         try {
-            signal.await(10, TimeUnit.SECONDS);
+            new CountDownLatch(1).await(10, TimeUnit.SECONDS);
             assertNotNull(joke);
-        } catch (InterruptedException pE) {
-            pE.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
